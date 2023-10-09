@@ -6,54 +6,44 @@ import org.cnss.Serveces.serviceEmploye;
 import org.cnss.Serveces.serviceSociete;
 import org.cnss.UI.Societe;
 
-import java.util.Scanner;
+import javax.swing.*;
 
 
 
 public class Main {
         public static void main(String[] args) {
-                Scanner scanner = new Scanner(System.in);
                 serviceSociete service = new serviceSociete();
-                System.out.println("Bienvenue !");
-                System.out.println("1. Ajouter Societe ");
-                System.out.println("2. Menu Employé");
-                System.out.println("3. Menu Société");
-                System.out.println("0. Quitter");
-                System.out.print("Veuillez sélectionner le menu : ");
 
-                int choixMenu =-1;
-                try {
-                        if (scanner.hasNextInt()) {
-                                choixMenu = scanner.nextInt();
-                        } else {
-                                System.out.println("Option invalide. Veuillez entrer un nombre.");
-                                return;
+
+
+                int choice = -1;
+                do {
+                        try {
+                                choice = Integer.parseInt(JOptionPane.showInputDialog(null , "Bienvenu \n 1- Ajouter une Societe \n 2- Espace employe \n 3- Espace entreprise "));
+                        } catch (Exception e) {
+                                JOptionPane.showMessageDialog(null, "Erreur de saisi" , "alert", JOptionPane.ERROR_MESSAGE);
+
                         }
-                } catch (Exception e) {
-                        System.out.println("Erreur lors de la saisie.");
-                        return;
-                }
 
-                switch (choixMenu) {
-                        case 1:
-                                service.AjouterSociete();
-                                break;
-                        case 2:
-                                Employer employeMenu = new Employer();
-                                employeMenu.employeMenu();
-                                break;
-                        case 3:
-                                Societe societeMenu = new Societe();
-                                societeMenu.societeMenu();
-                                break;
-                        case 0:
-                                System.out.println("Au revoir !");
-                                break;
-                        default:
-                                System.out.println("Option invalide. Veuillez réessayer.");
-                                break;
-                }
-
-                scanner.close();
+                        switch (choice) {
+                                case 1:
+                                        service.AjouterSociete();
+                                        break;
+                                case 2:
+                                        Employer employeMenu = new Employer();
+                                        employeMenu.employeMenu();
+                                        break;
+                                case 3:
+                                        Societe societeMenu = new Societe();
+                                        societeMenu.societeMenu();
+                                        break;
+                                case 0:
+                                        System.out.println("Au revoir !");
+                                        break;
+                                default:
+                                        JOptionPane.showMessageDialog(null, "Option invalide. Veuillez réessayer.", "Alert", JOptionPane.WARNING_MESSAGE);
+                                        break;
+                        }
+                }while (choice != 0);
         }
 }

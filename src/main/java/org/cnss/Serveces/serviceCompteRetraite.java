@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
 import java.sql.Date;
-import java.util.Scanner;
+import javax.swing.*;
 
 public class serviceCompteRetraite {
     private static salaire salaireDAO;
@@ -21,29 +21,49 @@ public class serviceCompteRetraite {
         this.salaire=new serviceSalaire();
     }
     public void canRetraited(){
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter the employee's matricule: ");
-        int matricule = scanner.nextInt();
-        Employe employe = employeDAO.Rechercher_employe(matricule);
 
-        if (employe != null) {
-            Date dateNaissanceSql = (Date) employe.getDate_de_naissance();
 
-            java.util.Date dateNaissanceUtil = new java.util.Date(dateNaissanceSql.getTime());
-            LocalDate localDateNaissance = dateNaissanceUtil.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            LocalDate currentDate = LocalDate.now();
-            int age = Period.between(localDateNaissance, currentDate).getYears();
-            if (age>54){
-                System.out.println("Employee's age: " + age + "\n il peut prendre la retraite");
-                salaire.calculersalairretraite(matricule);
-                societe soc=new societe();
-                soc.Declarationasretraited(matricule);
-            }else {
-                System.out.println("Employee est moin 55 " );
+
+        String matriculeInput = JOptionPane.showInputDialog(null, "Enter the employee's matricule:");
+
+
+        if (matriculeInput != null) {
+            try {
+                int matricule = Integer.parseInt(matriculeInput);
+                Employe employe = employeDAO.Rechercher_employe(matricule);
+
+                if (employe != null) {
+                    Date dateNaissanceSql = (Date) employe.getDate_de_naissance();
+
+                    java.util.Date dateNaissanceUtil = new java.util.Date(dateNaissanceSql.getTime());
+                    LocalDate localDateNaissance = dateNaissanceUtil.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    LocalDate currentDate = LocalDate.now();
+                    int age = Period.between(localDateNaissance, currentDate).getYears();
+
+                    if (age > 54) {
+                        // Use JOptionPane for message
+
+                        // Assuming salaire and societe classes are available
+                        salaire.calculersalairretraite(matricule);
+                        societe soc = new societe();
+                        soc.Declarationasretraited(matricule);
+                        JOptionPane.showMessageDialog(null, "Employee's age: " + age + "\nIl peut prendre la retraite", "Retirement Eligibility", JOptionPane.INFORMATION_MESSAGE);
+
+                    } else {
+                        // Use JOptionPane for message
+                        JOptionPane.showMessageDialog(null, "Employee is less than 55 years old", "Age Information", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                } else {
+                    // Use JOptionPane for message
+                    JOptionPane.showMessageDialog(null, "Employee not found with matricule " + matricule, "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (NumberFormatException e) {
+                // Handle the case where the input is not a valid integer
+                JOptionPane.showMessageDialog(null, "Please enter a valid matricule.", "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } else {
-            System.out.println("Employee not found with matricule " + matricule);
         }
+
+
     }
 
 

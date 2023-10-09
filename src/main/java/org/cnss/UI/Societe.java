@@ -3,6 +3,7 @@ package org.cnss.UI;
 import org.cnss.Serveces.serviceCompteRetraite;
 import org.cnss.Serveces.serviceSociete;
 
+import javax.swing.*;
 import java.util.Scanner;
 
 public class Societe {
@@ -10,11 +11,8 @@ public class Societe {
         Scanner scanner = new Scanner(System.in);
         serviceSociete service = new serviceSociete();
 
-        System.out.println("Authentification");
-        System.out.print("Email: ");
-        String email = scanner.nextLine();
-        System.out.print("Mot de passe: ");
-        String motDePasse = scanner.nextLine();
+        String email = JOptionPane.showInputDialog(null , "Entrer l'email de la Société", "Authentification", JOptionPane.INFORMATION_MESSAGE);
+        String motDePasse = JOptionPane.showInputDialog(null , "Entrer le mot de pass  de la Société", "Authentification", JOptionPane.INFORMATION_MESSAGE);
 
         boolean authentifie = service.authentifierSociete(email, motDePasse);
 
@@ -23,22 +21,10 @@ public class Societe {
             int idSociete = service.getIdSocieteConnectee();
             System.out.println("ID de la société connectée : " + idSociete);
 
-            afficherMenu();
 
             int choix = -1;
-            try {
-                if (scanner.hasNextInt()) {
-                    choix = scanner.nextInt();
-                } else {
-                    System.out.println("Option invalide. Veuillez entrer un nombre.");
-                    return;
-                }
-            } catch (Exception e) {
-                System.out.println("Erreur lors de la saisie.");
-                return;
-            }
-
-            while (choix != 0) {
+            do {
+                choix = afficherMenu();
                 switch (choix) {
                     case 1:
                         service.GetSociete();
@@ -57,23 +43,11 @@ public class Societe {
                         salaire.canRetraited();
                         break;
                     default:
-                        System.out.println("Option invalide. Veuillez réessayer.");
+                        JOptionPane.showMessageDialog(null, "Option invalide. Veuillez réessayer.", "Ajouter Société", JOptionPane.INFORMATION_MESSAGE);
                         break;
                 }
 
-                afficherMenu();
-                try {
-                    if (scanner.hasNextInt()) {
-                        choix = scanner.nextInt();
-                    } else {
-                        System.out.println("Option invalide. Veuillez entrer un nombre.");
-                        return;
-                    }
-                } catch (Exception e) {
-                    System.out.println("Erreur lors de la saisie.");
-                    return;
-                }
-            }
+            }while (choix != 0);
         } else {
             System.out.println("Authentification échouée !");
         }
@@ -82,14 +56,23 @@ public class Societe {
     }
 
 
-    private static void afficherMenu() {
-        System.out.println("Menu de la Société");
-        System.out.println("1. Obtenir les informations de la Société");
-        System.out.println("3. Déclaration Employé");
-        System.out.println("4. Arrêter la Déclaration");
-        System.out.println("5. Déclarer un Salaire");
-        System.out.println("6. Retraiter Compte Retraite");
-        System.out.println("0. Quitter");
-        System.out.print("Veuillez entrer votre choix : ");
+    private static int afficherMenu() {
+
+       int choix = -1;
+        try{
+            choix = Integer.parseInt(JOptionPane.showInputDialog(null , "********** Menu de la Société **********\n" +
+                    "1. Obtenir les informations de la Société \n" +
+                    "3. Déclaration Employé\n" +
+                    "4. Arrêter la Déclaration\n" +
+                    "5. Déclarer un Salaire\n" +
+                    "6. Retraiter Compte Retraite\n" +
+                    "0. Quitter \n"
+            ));
+
+
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(null , "Erreur de saisie ");
+        }
+        return choix;
     }
 }

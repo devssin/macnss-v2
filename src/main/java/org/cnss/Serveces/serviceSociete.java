@@ -2,10 +2,12 @@ package org.cnss.Serveces;
 
 import org.cnss.DAO.employe;
 import org.cnss.DAO.societe;
+import org.cnss.Main;
 import org.cnss.Model.Societe;
-
-import java.util.Scanner;
+import javax.swing.*;
 import java.sql.Date;
+import java.util.Scanner;
+
 
 public class serviceSociete {
     private static societe societeDAO;
@@ -56,25 +58,19 @@ public class serviceSociete {
         }
 
     public void AjouterSociete(){
-            Scanner scanner = new Scanner(System.in);
-            System.out.print("Entrez le nom de la société : ");
-            String nom = scanner.nextLine();
-            System.out.print("Entrez l'email de la société : ");
-            String email = scanner.nextLine();
-            System.out.print("Entrez le mot de passe de la société : ");
-            String motDePasse = scanner.nextLine();
+            String nom = JOptionPane.showInputDialog(null, "Entrer le nom de la Société: ", "Ajouter Société", JOptionPane.INFORMATION_MESSAGE);
+            String email = JOptionPane.showInputDialog(null, "Entrer l'email de la Société: ", "Ajouter Société", JOptionPane.INFORMATION_MESSAGE);
+            String motDePasse = JOptionPane.showInputDialog(null, "Entrer le mot de pass de la Société: ", "Ajouter Société", JOptionPane.INFORMATION_MESSAGE);
             societe societeDAO = new societe();
             societeDAO.ajouterSociete(nom, email, motDePasse);
-            System.out.println("Société ajoutée avec succès !");
-            scanner.close();
+            JOptionPane.showMessageDialog(null,"Société ajoutée avec succès !","Ajouter Société", JOptionPane.INFORMATION_MESSAGE );
         }
 
 
     public void EmployeDeclaration() {
             Scanner scanner = new Scanner(System.in);
             societe societeDAO = new societe();
-                System.out.print("Entrez le nom de l'employé : ");
-                String nomEmploye = scanner.nextLine();
+                String nomEmploye = JOptionPane.showInputDialog(null , "Entrez le nom de l'employé : ");
                 boolean employeDejaDeclare = societeDAO.checkIfDeclared(nomEmploye);
 
                 if (employeDejaDeclare) {
@@ -90,18 +86,17 @@ public class serviceSociete {
                         System.out.println("L'employé est Deja Travailler.");
                     }
                 } else {
-                    System.out.print("Entrez l'email de l'employé : ");
-                    String emailEmploye = scanner.nextLine();
-                    System.out.print("Entrez le matricule de l'employé : ");
-                    String MatriculeEmploye = scanner.nextLine();
-                    System.out.print("Entrez le mot de passe de l'employé : ");
-                    String motDePasseEmploye = scanner.nextLine();
-                    System.out.print("Entrez la date de naissance de l'employé (AAAA-MM-JJ) : ");
-                    String dateNaissance = scanner.nextLine();
+                    String emailEmploye = JOptionPane.showInputDialog("\"Entrez l'email de l'employé : \"");
+
+                    String MatriculeEmploye = JOptionPane.showInputDialog(null , "Entrez le matricule de l'employé : ");
+                    String motDePasseEmploye = JOptionPane.showInputDialog(null , "Entrez le mot de passe de l'employé : ");
+                    String dateNaissance = JOptionPane.showInputDialog(null , "Entrez la date de naissance de l'employé (AAAA-MM-JJ) : ");
                     Date dateNaissanceEmploye = Date.valueOf(dateNaissance);
-                    scanner.close();
+
                     societeDAO.declarerEmploye(nomEmploye, emailEmploye,MatriculeEmploye, motDePasseEmploye, dateNaissanceEmploye);
-                    System.out.println("L'employé a été déclaré avec succès !");
+                    JOptionPane.showMessageDialog(null , "L'employé a été déclaré avec succès !");
+
+
                 }
             }
     public void arreterDeclaration() {
@@ -118,27 +113,28 @@ public class serviceSociete {
         }
     }
     public void DeclarerSalaire(){
-        Scanner scanner = new Scanner(System.in);
         societe societeDAO = new societe();
         employe employedao = new employe();
 
-        System.out.print("Entrez le matricule de l'employé : ");
-        int matricule = scanner.nextInt();
+        int matricule = Integer.parseInt(JOptionPane.showInputDialog(null , "Entre le matricule "));
+
+
         boolean checkIfEmpExist = employedao.checkIfEmpExist(matricule);
         boolean checkIfwork = societeDAO.checkIfwork(matricule);
         if (checkIfEmpExist && checkIfwork){
-        System.out.print("Entrez le matricule de la societe : ");
-        int Societe = scanner.nextInt();
-        System.out.print("Entrez le salaire : ");
-        double Salaire = scanner.nextInt();
-        System.out.print("Entrez les jours absent: ");
-        int jrs = scanner.nextInt();
+        int societe_matricule = Integer.parseInt(JOptionPane.showInputDialog(null , "Entrer le matrucule de societe"));
+
+        double Salaire = Double.parseDouble(JOptionPane.showInputDialog(null , "Entre le salaire"));
+
+        int jrs = Integer.parseInt(JOptionPane.showInputDialog(null , "Entrez les jours absent:"));
         int nombreJours=Calculer_les_jours(jrs);
-        societeDAO.affecterLesJours(Salaire,Societe,matricule,nombreJours);
-            System.out.println("Declarer avec succee");
+        societeDAO.affecterLesJours(Salaire,societe_matricule,matricule,nombreJours);
+            JOptionPane.showMessageDialog(null, "Declarer avec succee");
+            Main.main(null);
         }
         else {
-            System.out.println("l'employer n existe pas");
+            JOptionPane.showMessageDialog(null, "l'employer n existe pas");
+            Main.main(null);
         }
     }
     public int Calculer_les_jours(int jrs){
